@@ -1,0 +1,32 @@
+@model PublicInfoModel
+@{
+    Layout = "";
+}
+
+<link href="~/Plugins/Widgets.ManufacturerShowcase/Content/css/styles.css" rel="stylesheet">
+
+@if (Model.Manufacturers?.Any() == true)
+{
+    <div class="manufacturer-showcase">
+        <div class="manufacturer-showcase__grid">
+            @foreach (var manufacturer in Model.Manufacturers)
+            {
+                <a class="manufacturer-showcase__item"
+                   href="@Url.RouteUrl("Manufacturer", new { SeName = manufacturer.SeName })"
+                   title="@manufacturer.Name">
+                    @if (Model.ShowImages && !string.IsNullOrEmpty(manufacturer.PictureUrl))
+                    {
+                        <img class="manufacturer-showcase__image"
+                             src="@manufacturer.PictureUrl"
+                             alt="@manufacturer.Name"
+                             loading="@(manufacturer.LazyLoading ? "lazy" : "eager")" />
+                    }
+                    @if (Model.ShowNames)
+                    {
+                        <span class="manufacturer-showcase__name">@manufacturer.Name</span>
+                    }
+                </a>
+            }
+        </div>
+    </div>
+}

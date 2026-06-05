@@ -1,0 +1,11 @@
+{
+  "Group": "Widgets",
+  "FriendlyName": "Manufacturer Showcase",
+  "SystemName": "Widgets.ManufacturerShowcase",
+  "Version": "5.00.1",
+  "SupportedVersions": [ "5.00" ],
+  "Author": "Sakib Hasan",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Widgets.ManufacturerShowcase.dll",
+  "Description": "Displays a list of manufacturers at the bottom of the homepage"
+}

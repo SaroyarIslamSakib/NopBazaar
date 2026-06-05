@@ -1,0 +1,57 @@
+@model ConfigurationModel
+
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+@await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
+<form asp-controller="WidgetManufacturerShowcase" asp-action="Configure" method="post">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="cards-group">
+                <div class="card card-default">
+                    <div class="card-header">
+                        @T("Plugins.Widgets.ManufacturerShowcase.Settings")
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="DisplayNumber_OverrideForStore" asp-input="DisplayNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="DisplayNumber" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="DisplayNumber" />
+                                <span asp-validation-for="DisplayNumber"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ShowImages_OverrideForStore" asp-input="ShowImages" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ShowImages" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ShowImages" />
+                                <span asp-validation-for="ShowImages"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ShowNames_OverrideForStore" asp-input="ShowNames" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ShowNames" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ShowNames" />
+                                <span asp-validation-for="ShowNames"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="offset-md-3 col-md-9">
+                                <button type="submit" name="save" class="btn btn-primary">@T("Admin.Common.Save")</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
