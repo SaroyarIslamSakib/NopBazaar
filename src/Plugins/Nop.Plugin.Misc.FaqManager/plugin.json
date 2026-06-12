@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Misc",
+  "FriendlyName": "Product FAQ Manager",
+  "SystemName": "Misc.FaqManager",
+  "Version": "5.00.0",
+  "SupportedVersions": [ "5.00" ],
+  "Author": "Sakib Hasan",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Misc.FaqManager.dll",
+  "Description": "Manage product FAQs with SEO-friendly structured data"
+}
