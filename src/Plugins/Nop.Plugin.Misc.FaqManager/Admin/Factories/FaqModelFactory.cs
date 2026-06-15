@@ -138,5 +138,69 @@ public class FaqModelFactory
 
     #endregion
 
+    #region FaqItem
+
+    public virtual async Task<FaqItemSearchModel> PrepareFaqItemSearchModelAsync(FaqItemSearchModel searchModel, FaqGroup faqGroup)
+    {
+        ArgumentNullException.ThrowIfNull(searchModel);
+
+        searchModel.FaqGroupId = faqGroup?.Id ?? 0;
+        searchModel.SetGridPageSize();
+
+        return searchModel;
+    }
+
+    public virtual async Task<FaqItemListModel> PrepareFaqItemListModelAsync(FaqItemSearchModel searchModel)
+    {
+        ArgumentNullException.ThrowIfNull(searchModel);
+
+        var items = await _faqService.GetAllFaqItemsAsync(
+            faqGroupId: searchModel.FaqGroupId,
+            pageIndex: searchModel.Page - 1,
+            pageSize: searchModel.PageSize);
+
+        var model = await new FaqItemListModel().PrepareToGridAsync(searchModel, items, () =>
+        {
+            return items.SelectAwait(async faqItem =>
+            {
+                var faqItemModel = faqItem.ToModel<FaqItemModel>();
+
+                faqItemModel.Question = await _localizationService.GetLocalizedAsync(faqItem, f => f.Question);
+                faqItemModel.Answer = await _localizationService.GetLocalizedAsync(faqItem, f => f.Answer);
+
+                var group = await _faqService.GetFaqGroupByIdAsync(faqItem.FaqGroupId);
+                faqItemModel.GroupName = group != null ? await _localizationService.GetLocalizedAsync(group, g => g.Name) : string.Empty;
+
+                return faqItemModel;
+            });
+        });
+
+        return model;
+    }
+
+    public virtual async Task<FaqItemModel> PrepareFaqItemModelAsync(FaqItemModel model, FaqItem faqItem, bool excludeProperties = false)
+    {
+        if (faqItem != null)
+        {
+            if (model == null)
+            {
+                model = faqItem.ToModel<FaqItemModel>();
+                model.Question = await _localizationService.GetLocalizedAsync(faqItem, f => f.Question);
+                model.Answer = await _localizationService.GetLocalizedAsync(faqItem, f => f.Answer);
+            }
+
+            model.GroupName = (await _faqService.GetFaqGroupByIdAsync(faqItem.FaqGroupId))?.Name ?? string.Empty;
+        }
+
+        if (faqItem == null && !excludeProperties)
+        {
+            model.Published = true;
+        }
+
+        return model;
+    }
+
+    #endregion
+
     #endregion
 }

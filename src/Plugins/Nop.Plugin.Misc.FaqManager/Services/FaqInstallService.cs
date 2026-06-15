@@ -101,8 +101,10 @@ public class FaqInstallService
             ["Plugins.Misc.FaqManager.FaqItems"] = "FAQ Items",
             ["Plugins.Misc.FaqManager.FaqItems.Added"] = "The new FAQ item has been added successfully.",
             ["Plugins.Misc.FaqManager.FaqItems.AddNew"] = "Add a new FAQ item",
+            ["Plugins.Misc.FaqManager.FaqItems.BackToFaqGroup"] = "back to FAQ group details",
             ["Plugins.Misc.FaqManager.FaqItems.Deleted"] = "The FAQ item has been deleted successfully.",
             ["Plugins.Misc.FaqManager.FaqItems.EditFaqItemDetails"] = "Edit FAQ item details",
+            ["Plugins.Misc.FaqManager.FaqItems.SaveBeforeEdit"] = "You need to save the FAQ group before you can add FAQ items.",
             ["Plugins.Misc.FaqManager.FaqItems.Updated"] = "The FAQ item has been updated successfully.",
 
             //Admin - FAQ Item Fields

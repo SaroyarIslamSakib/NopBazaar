@@ -2,8 +2,10 @@
 
 @{
     const string hideInfoBlockAttributeName = "FaqGroupPage.HideInfoBlock";
+    const string hideItemsBlockAttributeName = "FaqGroupPage.HideItemsBlock";
     var customer = await workContext.GetCurrentCustomerAsync();
     var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName);
+    var hideItemsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideItemsBlockAttributeName);
 }
 
 <div asp-validation-summary="All"></div>
@@ -53,6 +55,61 @@
                         </div>
                     </div>
                 </nop-card>
+                @if (Model.Id > 0)
+                {
+                    <nop-card asp-name="faqgroup-items" asp-icon="fas fa-question-circle" asp-title="@T("Plugins.Misc.FaqManager.FaqItems")" asp-hide-block-attribute-name="@hideItemsBlockAttributeName" asp-hide="@hideItemsBlock">
+                        <div class="card-body">
+                            @await Html.PartialAsync("Table", new DataTablesModel
+                            {
+                                Name = "faqitem-grid",
+                                UrlRead = new DataUrl("FaqItemList", "FaqManagerAdmin", new RouteValueDictionary { [nameof(Model.FaqItemSearchModel.FaqGroupId)] = Model.FaqItemSearchModel.FaqGroupId }),
+                                Length = Model.FaqItemSearchModel.PageSize,
+                                LengthMenu = Model.FaqItemSearchModel.AvailablePageSizes,
+                                ColumnCollection = new List<ColumnProperty>
+                                {
+                                    new ColumnProperty(nameof(FaqItemModel.Question))
+                                    {
+                                        Title = T("Plugins.Misc.FaqManager.FaqItems.Fields.Question").Text
+                                    },
+                                    new ColumnProperty(nameof(FaqItemModel.Published))
+                                    {
+                                        Title = T("Plugins.Misc.FaqManager.FaqItems.Fields.Published").Text,
+                                        Width = "100",
+                                        ClassName = NopColumnClassDefaults.CenterAll,
+                                        Render = new RenderBoolean()
+                                    },
+                                    new ColumnProperty(nameof(FaqItemModel.DisplayOrder))
+                                    {
+                                        Title = T("Plugins.Misc.FaqManager.FaqItems.Fields.DisplayOrder").Text,
+                                        Width = "150",
+                                        ClassName = NopColumnClassDefaults.CenterAll
+                                    },
+                                    new ColumnProperty(nameof(FaqItemModel.Id))
+                                    {
+                                        Title = T("Admin.Common.Edit").Text,
+                                        Width = "100",
+                                        ClassName = NopColumnClassDefaults.Button,
+                                        Render = new RenderButtonEdit(new DataUrl("~/Admin/FaqItem/Edit/"))
+                                    }
+                                }
+                            })
+                        </div>
+                        <div class="card-footer">
+                            <a asp-action="FaqItemCreate" asp-route-faqGroupId="@Model.Id" class="btn btn-primary">
+                                <i class="fas fa-square-plus"></i>
+                                @T("Plugins.Misc.FaqManager.FaqItems.AddNew")
+                            </a>
+                        </div>
+                    </nop-card>
+                }
+                else
+                {
+                    <nop-card asp-name="faqgroup-items" asp-icon="fas fa-question-circle" asp-title="@T("Plugins.Misc.FaqManager.FaqItems")" asp-hide-block-attribute-name="@hideItemsBlockAttributeName" asp-hide="@hideItemsBlock">
+                        <div class="card-body">
+                            @T("Plugins.Misc.FaqManager.FaqItems.SaveBeforeEdit")
+                        </div>
+                    </nop-card>
+                }
             </nop-cards>
         </div>
     </div>

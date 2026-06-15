@@ -156,6 +156,7 @@ public class FaqManagerAdminController : BasePluginController
             return RedirectToAction(nameof(FaqGroups));
 
         var model = await _faqModelFactory.PrepareFaqGroupModelAsync(null, faqGroup);
+        model.FaqItemSearchModel = await _faqModelFactory.PrepareFaqItemSearchModelAsync(model.FaqItemSearchModel, faqGroup);
 
         return View("~/Plugins/Misc.FaqManager/Admin/Views/FaqGroupEdit.cshtml", model);
     }
@@ -185,6 +186,7 @@ public class FaqManagerAdminController : BasePluginController
         }
 
         model = await _faqModelFactory.PrepareFaqGroupModelAsync(model, faqGroup, true);
+        model.FaqItemSearchModel = await _faqModelFactory.PrepareFaqItemSearchModelAsync(model.FaqItemSearchModel, faqGroup);
 
         return View("~/Plugins/Misc.FaqManager/Admin/Views/FaqGroupEdit.cshtml", model);
     }
@@ -205,6 +207,125 @@ public class FaqManagerAdminController : BasePluginController
         _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Misc.FaqManager.FaqGroups.Deleted"));
 
         return RedirectToAction(nameof(FaqGroups));
+    }
+
+    #endregion
+
+    #region FaqItems
+
+    [HttpPost]
+    [CheckPermission(FaqManagerDefaults.Permissions.FAQ_VIEW)]
+    public async Task<IActionResult> FaqItemList(FaqItemSearchModel searchModel)
+    {
+        var model = await _faqModelFactory.PrepareFaqItemListModelAsync(searchModel);
+
+        return Json(model);
+    }
+
+    [CheckPermission(FaqManagerDefaults.Permissions.FAQ_MANAGE)]
+    public async Task<IActionResult> FaqItemCreate(int faqGroupId)
+    {
+        var faqGroup = await _faqService.GetFaqGroupByIdAsync(faqGroupId);
+        if (faqGroup == null)
+            return RedirectToAction(nameof(FaqGroups));
+
+        var model = await _faqModelFactory.PrepareFaqItemModelAsync(new FaqItemModel(), null);
+        model.FaqGroupId = faqGroupId;
+        model.GroupName = await _localizationService.GetLocalizedAsync(faqGroup, g => g.Name);
+
+        return View("~/Plugins/Misc.FaqManager/Admin/Views/FaqItemCreate.cshtml", model);
+    }
+
+    [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(FaqManagerDefaults.Permissions.FAQ_MANAGE)]
+    public async Task<IActionResult> FaqItemCreate(FaqItemModel model, bool continueEditing)
+    {
+        var faqGroup = await _faqService.GetFaqGroupByIdAsync(model.FaqGroupId);
+        if (faqGroup == null)
+            return RedirectToAction(nameof(FaqGroups));
+
+        if (ModelState.IsValid)
+        {
+            var faqItem = model.ToEntity<FaqItem>();
+            faqItem.FaqGroupId = model.FaqGroupId;
+            await _faqService.InsertFaqItemAsync(faqItem);
+
+            await _customerActivityService.InsertActivityAsync(FaqManagerDefaults.ActivityLogTypeSystemNames.AddNewFaqItem,
+                string.Format(await _localizationService.GetResourceAsync("Plugins.Misc.FaqManager.ActivityLog.AddNewFaqItem"), faqItem.Id), faqItem);
+
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Misc.FaqManager.FaqItems.Added"));
+
+            if (!continueEditing)
+                return RedirectToAction(nameof(FaqGroupEdit), new { id = faqGroup.Id });
+
+            return RedirectToAction(nameof(FaqItemEdit), new { id = faqItem.Id });
+        }
+
+        model = await _faqModelFactory.PrepareFaqItemModelAsync(model, null, true);
+        model.GroupName = await _localizationService.GetLocalizedAsync(faqGroup, g => g.Name);
+
+        return View("~/Plugins/Misc.FaqManager/Admin/Views/FaqItemCreate.cshtml", model);
+    }
+
+    [CheckPermission(FaqManagerDefaults.Permissions.FAQ_VIEW)]
+    public async Task<IActionResult> FaqItemEdit(int id)
+    {
+        var faqItem = await _faqService.GetFaqItemByIdAsync(id);
+        if (faqItem == null)
+            return RedirectToAction(nameof(FaqGroups));
+
+        var model = await _faqModelFactory.PrepareFaqItemModelAsync(null, faqItem);
+
+        return View("~/Plugins/Misc.FaqManager/Admin/Views/FaqItemEdit.cshtml", model);
+    }
+
+    [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(FaqManagerDefaults.Permissions.FAQ_MANAGE)]
+    public async Task<IActionResult> FaqItemEdit(FaqItemModel model, bool continueEditing)
+    {
+        var faqItem = await _faqService.GetFaqItemByIdAsync(model.Id);
+        if (faqItem == null)
+            return RedirectToAction(nameof(FaqGroups));
+
+        if (ModelState.IsValid)
+        {
+            faqItem = model.ToEntity(faqItem);
+            await _faqService.UpdateFaqItemAsync(faqItem);
+
+            await _customerActivityService.InsertActivityAsync(FaqManagerDefaults.ActivityLogTypeSystemNames.EditFaqItem,
+                string.Format(await _localizationService.GetResourceAsync("Plugins.Misc.FaqManager.ActivityLog.EditFaqItem"), faqItem.Id), faqItem);
+
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Misc.FaqManager.FaqItems.Updated"));
+
+            if (!continueEditing)
+                return RedirectToAction(nameof(FaqGroupEdit), new { id = faqItem.FaqGroupId });
+
+            return RedirectToAction(nameof(FaqItemEdit), new { id = faqItem.Id });
+        }
+
+        model = await _faqModelFactory.PrepareFaqItemModelAsync(model, faqItem, true);
+
+        return View("~/Plugins/Misc.FaqManager/Admin/Views/FaqItemEdit.cshtml", model);
+    }
+
+    [HttpPost]
+    [CheckPermission(FaqManagerDefaults.Permissions.FAQ_MANAGE)]
+    public async Task<IActionResult> FaqItemDelete(int id)
+    {
+        var faqItem = await _faqService.GetFaqItemByIdAsync(id);
+        if (faqItem == null)
+            return RedirectToAction(nameof(FaqGroups));
+
+        var faqGroupId = faqItem.FaqGroupId;
+
+        await _faqService.DeleteFaqItemAsync(faqItem);
+
+        await _customerActivityService.InsertActivityAsync(FaqManagerDefaults.ActivityLogTypeSystemNames.DeleteFaqItem,
+            string.Format(await _localizationService.GetResourceAsync("Plugins.Misc.FaqManager.ActivityLog.DeleteFaqItem"), faqItem.Id), faqItem);
+
+        _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Misc.FaqManager.FaqItems.Deleted"));
+
+        return RedirectToAction(nameof(FaqGroupEdit), new { id = faqGroupId });
     }
 
     #endregion

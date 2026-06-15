@@ -24,7 +24,7 @@ public record FaqItemModel : BaseNopEntityModel, ILocalizedModel<FaqItemModel.Fa
 
     public int FaqGroupId { get; set; }
 
-    public string GroupName { get; set; }
+    public string? GroupName { get; set; }
 
     [NopResourceDisplayName("Plugins.Misc.FaqManager.FaqItems.Fields.Published")]
     public bool Published { get; set; }

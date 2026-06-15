@@ -19,6 +19,9 @@
     <None Remove="Admin\Views\FaqGroupCreate.cshtml" />
     <None Remove="Admin\Views\FaqGroupEdit.cshtml" />
     <None Remove="Admin\Views\_CreateOrUpdate.FaqGroup.cshtml" />
+    <None Remove="Admin\Views\FaqItemCreate.cshtml" />
+    <None Remove="Admin\Views\FaqItemEdit.cshtml" />
+    <None Remove="Admin\Views\_CreateOrUpdate.FaqItem.cshtml" />
     <None Remove="Admin\Views\_ViewImports.cshtml" />
     <None Remove="Admin\Views\_ViewStart.cshtml" />
     <None Remove="logo.png" />
@@ -39,6 +42,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Admin\Views\_CreateOrUpdate.FaqGroup.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Admin\Views\FaqItemCreate.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Admin\Views\FaqItemEdit.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Admin\Views\_CreateOrUpdate.FaqItem.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Admin\Views\_ViewImports.cshtml">
