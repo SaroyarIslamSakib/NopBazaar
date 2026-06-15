@@ -1,0 +1,69 @@
+@model FaqContentModel
+
+@{
+    ViewBag.PageTitle = T("Plugins.Misc.FaqManager.FaqGroups").Text;
+    NopHtml.SetActiveMenuItemSystemName(FaqManagerDefaults.FaqGroupsMenuSystemName);
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Plugins.Misc.FaqManager.FaqGroups")
+    </h1>
+    <div class="float-right">
+        <a asp-action="FaqGroupCreate" class="btn btn-primary">
+            <i class="fas fa-square-plus"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default">
+                    <div class="card-body">
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "faqgroup-grid",
+                            UrlRead = new DataUrl("FaqGroupList", "FaqManagerAdmin", null),
+                            Length = Model.FaqGroupSearch.PageSize,
+                            LengthMenu = Model.FaqGroupSearch.AvailablePageSizes,
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(FaqGroupModel.Name))
+                                {
+                                    Title = T("Plugins.Misc.FaqManager.FaqGroups.Fields.Name").Text
+                                },
+                                new ColumnProperty(nameof(FaqGroupModel.ProductName))
+                                {
+                                    Title = T("Plugins.Misc.FaqManager.FaqGroups.Fields.Product").Text
+                                },
+                                new ColumnProperty(nameof(FaqGroupModel.Published))
+                                {
+                                    Title = T("Plugins.Misc.FaqManager.FaqGroups.Fields.Published").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(FaqGroupModel.DisplayOrder))
+                                {
+                                    Title = T("Plugins.Misc.FaqManager.FaqGroups.Fields.DisplayOrder").Text,
+                                    Width = "150",
+                                    ClassName = NopColumnClassDefaults.CenterAll
+                                },
+                                new ColumnProperty(nameof(FaqGroupModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonEdit(new DataUrl(Url.RouteUrl(FaqManagerDefaults.Routes.Admin.FaqGroupEditRouteName)))
+                                }
+                            }
+                        })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -38,7 +38,12 @@ public class AdminMenuCreatedEventConsumer : IConsumer<AdminMenuCreatedEvent>
         if (plugin == null || !_pluginManager.IsPluginActive(plugin))
             return;
 
-        eventMessage.RootMenuItem.InsertAfter("News items", new()
+        //insert after "News items" if News plugin is active, otherwise after "Message templates"
+        var insertAfterSystemName = eventMessage.RootMenuItem.ContainsSystemName("News items")
+            ? "News items"
+            : "Message templates";
+
+        eventMessage.RootMenuItem.InsertAfter(insertAfterSystemName, new()
         {
             SystemName = FaqManagerDefaults.FaqGroupsMenuSystemName,
             Title = await _localizationService.GetResourceAsync("Plugins.Misc.FaqManager.FaqGroups"),

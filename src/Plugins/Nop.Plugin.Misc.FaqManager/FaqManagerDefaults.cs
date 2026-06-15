@@ -28,9 +28,13 @@ public class FaqManagerDefaults
             public static string FaqGroupsRouteName => ROUTE_PREFIX + "FaqGroups";
             public static string FaqGroupCreateRouteName => ROUTE_PREFIX + "FaqGroupCreate";
             public static string FaqGroupEditRouteName => ROUTE_PREFIX + "FaqGroupEdit";
+            public static string FaqGroupListRouteName => ROUTE_PREFIX + "FaqGroupList";
+            public static string FaqGroupDeleteRouteName => ROUTE_PREFIX + "FaqGroupDelete";
             public static string FaqItemsRouteName => ROUTE_PREFIX + "FaqItems";
+            public static string FaqItemListRouteName => ROUTE_PREFIX + "FaqItemList";
             public static string FaqItemEditRouteName => ROUTE_PREFIX + "FaqItemEdit";
             public static string FaqItemCreateRouteName => ROUTE_PREFIX + "FaqItemCreate";
+            public static string FaqItemDeleteRouteName => ROUTE_PREFIX + "FaqItemDelete";
         }
 
         public static class Public

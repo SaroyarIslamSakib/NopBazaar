@@ -1,0 +1,34 @@
+@model FaqGroupModel
+
+@{
+    ViewBag.PageTitle = T("Plugins.Misc.FaqManager.FaqGroups.EditFaqGroupDetails").Text;
+    NopHtml.SetActiveMenuItemSystemName(FaqManagerDefaults.FaqGroupsMenuSystemName);
+}
+
+<form asp-controller="FaqManagerAdmin" asp-action="FaqGroupEdit" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Plugins.Misc.FaqManager.FaqGroups.EditFaqGroupDetails") - @Model.Name
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="FaqGroups">@T("Plugins.Misc.FaqManager.FaqGroups.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-floppy-disk"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn btn-primary">
+                <i class="far fa-floppy-disk"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <span id="faqgroup-delete" class="btn btn-danger">
+                <i class="far fa-trash-can"></i>
+                @T("Admin.Common.Delete")
+            </span>
+        </div>
+    </div>
+    @await Html.PartialAsync("~/Plugins/Misc.FaqManager/Admin/Views/_CreateOrUpdate.FaqGroup.cshtml", Model)
+</form>
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="faqgroup-delete" />

@@ -68,10 +68,12 @@ public class FaqInstallService
             ["Plugins.Misc.FaqManager.ActivityLog.DeleteFaqItem"] = "Deleted a FAQ item (ID = {0})",
 
             //Admin - Configuration
+            ["Plugins.Misc.FaqManager.Configuration.BlockTitle.Settings"] = "Settings",
             ["Plugins.Misc.FaqManager.Configuration.Fields.ShowFaqCount"] = "Show FAQ count",
             ["Plugins.Misc.FaqManager.Configuration.Fields.ShowFaqCount.Hint"] = "Check to show the number of FAQ items next to the section heading on the product page.",
 
             //Admin - FAQ Groups
+            ["Plugins.Misc.FaqManager.FaqGroups.Title"] = "FAQ Groups",
             ["Plugins.Misc.FaqManager.FaqGroups"] = "FAQ Groups",
             ["Plugins.Misc.FaqManager.FaqGroups.Added"] = "The new FAQ group has been added successfully.",
             ["Plugins.Misc.FaqManager.FaqGroups.AddNew"] = "Add a new FAQ group",
