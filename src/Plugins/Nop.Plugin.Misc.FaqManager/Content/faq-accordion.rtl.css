@@ -2,7 +2,11 @@
     direction: rtl;
 }
 
-.faq-accordion-button::before {
-    margin-right: 0;
-    margin-left: 10px;
+.faq-accordion-header-bar {
+    flex-direction: row-reverse;
+}
+
+.faq-accordion-icon {
+    margin-left: 0;
+    margin-right: 8px;
 }

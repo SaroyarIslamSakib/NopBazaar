@@ -1,6 +1,11 @@
 @model Nop.Plugin.Misc.FaqManager.Public.Models.ProductFaqModel
 
 @{
+    Layout = "";
+    var supportRtl = await Html.ShouldUseRtlThemeAsync();
+
+    NopHtml.AddCssFileParts($"~/Plugins/Misc.FaqManager/Content/faq-accordion{(supportRtl ? ".rtl" : "")}.css");
+
     var sectionTitle = Model.ShowFaqCount
         ? $"{T("Plugins.Misc.FaqManager.Public.FaqSectionTitle").Text} ({Model.FaqCount})"
         : T("Plugins.Misc.FaqManager.Public.FaqSectionTitle").Text;
@@ -31,23 +36,35 @@
 }
 
 <div class="faq-accordion-section">
-    <h3 class="faq-accordion-title">@sectionTitle</h3>
+    <div class="faq-accordion-header-bar">
+        <div class="faq-accordion-header-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+        </div>
+        <h3 class="faq-accordion-title">@sectionTitle</h3>
+    </div>
     <div class="faq-accordion" id="faq-accordion">
         @for (var i = 0; i < Model.Items.Count; i++)
         {
             var item = Model.Items[i];
             var isExpanded = i == 0;
             <div class="faq-accordion-item">
-                <h4 class="faq-accordion-header">
-                    <button class="faq-accordion-button @(isExpanded ? "" : "collapsed")" type="button"
-                            data-toggle="collapse" data-target="#faq-answer-@item.Id"
-                            aria-expanded="@isExpanded" aria-controls="faq-answer-@item.Id">
-                        @item.Question
-                    </button>
-                </h4>
-                <div id="faq-answer-@item.Id" class="faq-accordion-body @(isExpanded ? "show" : "collapse")"
-                     aria-labelledby="faq-heading-@item.Id" data-parent="#faq-accordion">
-                    <div class="faq-accordion-body-inner">
+                <div class="faq-accordion-question" role="button" tabindex="0"
+                     aria-expanded="@isExpanded" aria-controls="faq-answer-@item.Id"
+                     data-target="#faq-answer-@item.Id">
+                    <span class="faq-accordion-question-text">@item.Question</span>
+                    <span class="faq-accordion-icon @(isExpanded ? "" : "collapsed")">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                    </span>
+                </div>
+                <div id="faq-answer-@item.Id" class="faq-accordion-answer @(isExpanded ? "show" : "")">
+                    <div class="faq-accordion-answer-inner">
                         @Html.Raw(item.Answer)
                     </div>
                 </div>
@@ -55,3 +72,37 @@
         }
     </div>
 </div>
+
+<script asp-location="Footer">
+    (function () {
+        function toggleFaqItem(clickedQuestion) {
+            var isExpanded = clickedQuestion.getAttribute('aria-expanded') === 'true';
+            var targetId = clickedQuestion.getAttribute('data-target');
+            var answer = document.querySelector(targetId);
+            var icon = clickedQuestion.querySelector('.faq-accordion-icon');
+
+            if (isExpanded) {
+                clickedQuestion.setAttribute('aria-expanded', 'false');
+                answer.classList.remove('show');
+                icon.classList.add('collapsed');
+            } else {
+                clickedQuestion.setAttribute('aria-expanded', 'true');
+                answer.classList.add('show');
+                icon.classList.remove('collapsed');
+            }
+        }
+
+        var questions = document.querySelectorAll('.faq-accordion-question');
+        questions.forEach(function (question) {
+            question.addEventListener('click', function () {
+                toggleFaqItem(this);
+            });
+            question.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggleFaqItem(this);
+                }
+            });
+        });
+    })();
+</script>
