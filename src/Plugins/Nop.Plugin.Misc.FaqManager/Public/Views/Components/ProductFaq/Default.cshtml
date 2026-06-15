@@ -1,0 +1,57 @@
+@model Nop.Plugin.Misc.FaqManager.Public.Models.ProductFaqModel
+
+@{
+    var sectionTitle = Model.ShowFaqCount
+        ? $"{T("Plugins.Misc.FaqManager.Public.FaqSectionTitle").Text} ({Model.FaqCount})"
+        : T("Plugins.Misc.FaqManager.Public.FaqSectionTitle").Text;
+
+    var faqLdItems = Model.Items.Select(item => new
+    {
+        name = item.Question,
+        acceptedAnswer = new
+        {
+            type = "Answer",
+            text = item.Answer
+        }
+    }).ToList();
+
+    var jsonLd = new
+    {
+        context = "https://schema.org",
+        type = "FAQPage",
+        mainEntity = faqLdItems.Select(item => new
+        {
+            type = "Question",
+            name = item.name,
+            acceptedAnswer = item.acceptedAnswer
+        }).ToList()
+    };
+
+    NopHtml.AddJsonLdParts(System.Text.Json.JsonSerializer.Serialize(jsonLd));
+}
+
+<div class="faq-accordion-section">
+    <h3 class="faq-accordion-title">@sectionTitle</h3>
+    <div class="faq-accordion" id="faq-accordion">
+        @for (var i = 0; i < Model.Items.Count; i++)
+        {
+            var item = Model.Items[i];
+            var isExpanded = i == 0;
+            <div class="faq-accordion-item">
+                <h4 class="faq-accordion-header">
+                    <button class="faq-accordion-button @(isExpanded ? "" : "collapsed")" type="button"
+                            data-toggle="collapse" data-target="#faq-answer-@item.Id"
+                            aria-expanded="@isExpanded" aria-controls="faq-answer-@item.Id">
+                        @item.Question
+                    </button>
+                </h4>
+                <div id="faq-answer-@item.Id" class="faq-accordion-body @(isExpanded ? "show" : "collapse")"
+                     aria-labelledby="faq-heading-@item.Id" data-parent="#faq-accordion">
+                    <div class="faq-accordion-body-inner">
+                        @Html.Raw(item.Answer)
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

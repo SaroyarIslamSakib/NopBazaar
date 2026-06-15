@@ -1,0 +1,8 @@
+.faq-accordion-section {
+    direction: rtl;
+}
+
+.faq-accordion-button::before {
+    margin-right: 0;
+    margin-left: 10px;
+}

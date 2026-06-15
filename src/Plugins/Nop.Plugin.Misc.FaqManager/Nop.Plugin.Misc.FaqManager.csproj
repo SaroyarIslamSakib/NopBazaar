@@ -24,8 +24,13 @@
     <None Remove="Admin\Views\_CreateOrUpdate.FaqItem.cshtml" />
     <None Remove="Admin\Views\_ViewImports.cshtml" />
     <None Remove="Admin\Views\_ViewStart.cshtml" />
+    <None Remove="Public\Views\Components\ProductFaq\Default.cshtml" />
+    <None Remove="Public\Views\_ViewImports.cshtml" />
+    <None Remove="Public\Views\_ViewStart.cshtml" />
     <None Remove="logo.png" />
     <None Remove="plugin.json" />
+    <None Remove="Content\faq-accordion.css" />
+    <None Remove="Content\faq-accordion.rtl.css" />
   </ItemGroup>
 
   <ItemGroup>
@@ -59,10 +64,25 @@
     <Content Include="Admin\Views\_ViewStart.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Public\Views\Components\ProductFaq\Default.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Public\Views\_ViewImports.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Public\Views\_ViewStart.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="plugin.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\faq-accordion.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\faq-accordion.rtl.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

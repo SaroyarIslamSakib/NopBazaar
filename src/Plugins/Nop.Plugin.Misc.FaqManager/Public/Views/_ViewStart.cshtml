@@ -1,0 +1,8 @@
+@model Nop.Plugin.Misc.FaqManager.Public.Models.ProductFaqModel
+
+@{
+    Layout = "";
+    var supportRtl = await Html.ShouldUseRtlThemeAsync();
+
+    NopHtml.AppendCssFileParts($"~/Plugins/Misc.FaqManager/Content/faq-accordion{(supportRtl ? ".rtl" : "")}.css");
+}
