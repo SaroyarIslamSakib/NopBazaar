@@ -31,4 +31,4 @@
     </div>
     @await Html.PartialAsync("~/Plugins/Misc.FaqManager/Admin/Views/_CreateOrUpdate.FaqGroup.cshtml", Model)
 </form>
-<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="faqgroup-delete" />
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="faqgroup-delete" asp-action="FaqGroupDelete" />
